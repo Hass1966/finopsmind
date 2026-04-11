@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinOpsMind — AI-Powered Cloud Cost Intelligence</title>
+<meta name="description" content="The only FinOps platform that thinks. 56 rules. Agentic AI. Self-learning. From automated insights to autonomous optimisation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── Variables ─────────────────────────────────────────────────── */
+:root {
+  --bg:    #020509;
+  --bg2:   #05080f;
+  --bg3:   #080d18;
+  --card:  #0b1122;
+  --card2: #0f1628;
+  --border:  rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.14);
+
+  /* Standard — electric teal, sharp and cold */
+  --teal:     #00ffc8;
+  --teal-dim: #00c49a;
+  --std-grad: linear-gradient(135deg, #00ffc8 0%, #00b4d8 100%);
+  --std-glow: rgba(0,255,200,0.18);
+
+  /* Pro — vivid violet to cobalt — unmistakably different */
+  --purple:     #b197fc;
+  --purple-dim: #7c5cdb;
+  --blue:       #60a5fa;
+  --pro-grad:   linear-gradient(135deg, #b197fc 0%, #60a5fa 100%);
+  --pro-glow:   rgba(177,151,252,0.2);
+
+  --gold: #fbbf24;
+  --red:  #f87171;
+
+  --text:  #eef4ff;
+  --text2: #7a8fad;
+  --text3: #38506a;
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+
+  --radius:    18px;
+  --radius-sm: 12px;
+}
+
+/* ── Reset ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); background: var(--bg); color: var(--text); line-height: 1.65; overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+
+/* ── Background atmosphere ─────────────────────────────────────── */
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,255,200,0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,200,0.022) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+}
+.bg-noise {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* Ambient orbs */
+.bg-orb-1 {
+  position: fixed; top: -20vh; left: -10vw; width: 70vw; height: 70vh;
+  border-radius: 50%; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse, rgba(0,255,200,0.055) 0%, transparent 65%);
+  filter: blur(1px);
+}
+.bg-orb-2 {
+  position: fixed; top: 20vh; right: -15vw; width: 55vw; height: 55vh;
+  border-radius: 50%; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse, rgba(177,151,252,0.06) 0%, transparent 65%);
+  filter: blur(1px);
+}
+.bg-orb-3 {
+  position: fixed; bottom: -10vh; left: 30%; width: 40vw; height: 40vh;
+  border-radius: 50%; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse, rgba(96,165,250,0.04) 0%, transparent 65%);
+}
+
+/* ── Nav ───────────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 0 2.5rem;
+  background: rgba(5,8,15,0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  height: 64px;
+  display: flex; align-items: center;
+  transition: background 0.3s;
+}
+nav.scrolled { background: rgba(5,8,15,0.97); }
+.nav-inner {
+  max-width: 1320px; margin: 0 auto; width: 100%;
+  display: flex; align-items: center; gap: 3rem;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 0.6rem;
+  font-family: var(--font-display); font-weight: 800; font-size: 1.15rem;
+  letter-spacing: -0.02em; flex-shrink: 0;
+}
+.nav-logo-mark {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--std-grad);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; font-weight: 900; color: #05080f;
+}
+.nav-logo-text { color: var(--text); }
+.nav-logo-text span { color: var(--teal); }
+.nav-links { display: flex; gap: 0.25rem; flex: 1; }
+.nav-links a {
+  padding: 0.4rem 0.9rem; border-radius: 8px;
+  font-size: 0.875rem; font-weight: 500; color: var(--text2);
+  transition: all 0.2s;
+}
+.nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+.nav-links a.active { color: var(--text); }
+.nav-right { display: flex; align-items: center; gap: 0.75rem; margin-left: auto; }
+.nav-sign-in {
+  padding: 0.45rem 1.1rem; border-radius: 8px;
+  font-size: 0.875rem; font-weight: 500; color: var(--text2);
+  transition: color 0.2s; background: none; border: none; cursor: pointer;
+}
+.nav-sign-in:hover { color: var(--text); }
+.btn-nav-pro {
+  padding: 0.45rem 1.2rem; border-radius: 8px;
+  font-size: 0.875rem; font-weight: 600;
+  background: var(--pro-grad); color: #fff;
+  border: none; cursor: pointer; transition: opacity 0.2s, transform 0.2s;
+}
+.btn-nav-pro:hover { opacity: 0.9; transform: translateY(-1px); }
+
+/* ── Hero ──────────────────────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  padding: 140px 2.5rem 100px;
+  display: flex; align-items: center;
+  position: relative; z-index: 1;
+}
+.hero-glow-1 {
+  position: absolute; top: -160px; left: 50%; transform: translateX(-65%);
+  width: 1100px; height: 800px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(ellipse, rgba(0,255,200,0.1) 0%, rgba(0,180,216,0.04) 45%, transparent 70%);
+  filter: blur(2px);
+}
+.hero-glow-2 {
+  position: absolute; top: 100px; right: -300px;
+  width: 800px; height: 700px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(ellipse, rgba(177,151,252,0.09) 0%, transparent 65%);
+  filter: blur(2px);
+}
+.hero-inner {
+  max-width: 1320px; margin: 0 auto; width: 100%;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
+  position: relative; z-index: 1;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.3rem 0.9rem; border-radius: 100px;
+  border: 1px solid rgba(0,255,200,0.25);
+  background: rgba(0,255,200,0.06);
+  font-size: 0.78rem; font-weight: 600; color: var(--teal);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-bottom: 1.75rem;
+}
+.hero-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 5.5vw, 5rem);
+  font-weight: 800; line-height: 1.02;
+  letter-spacing: -0.035em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 em {
+  font-style: normal;
+  background: var(--std-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero h1 .pro-em {
+  font-style: normal;
+  background: var(--pro-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 1.1rem; color: var(--text2); max-width: 480px;
+  line-height: 1.8; margin-bottom: 2.5rem;
+}
+.hero-ctas { display: flex; gap: 0.75rem; margin-bottom: 3.5rem; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.75rem 1.75rem; border-radius: var(--radius-sm);
+  font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
+  background: var(--std-grad); color: #05080f;
+  border: none; cursor: pointer; transition: all 0.25s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,255,200,0.25); }
+.btn-pro {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.75rem 1.75rem; border-radius: var(--radius-sm);
+  font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
+  background: var(--pro-grad); color: #fff;
+  border: none; cursor: pointer; transition: all 0.25s;
+}
+.btn-pro:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(177,151,252,0.3); }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.75rem 1.5rem; border-radius: var(--radius-sm);
+  font-family: var(--font-body); font-size: 0.9rem; font-weight: 500;
+  background: transparent; color: var(--text2);
+  border: 1px solid var(--border2); cursor: pointer; transition: all 0.25s;
+}
+.btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
+.hero-stats { display: flex; gap: 3rem; }
+.stat { }
+.stat-num {
+  font-family: var(--font-display); font-size: 2rem; font-weight: 800;
+  background: var(--std-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+.stat-label { font-size: 0.8rem; color: var(--text3); margin-top: 0.25rem; letter-spacing: 0.04em; }
+
+/* Hero visual — product split cards */
+.hero-visual { position: relative; }
+.product-cards {
+  display: flex; flex-direction: column; gap: 1rem;
+  position: relative;
+}
+.product-card {
+  border-radius: var(--radius); padding: 1.75rem 2rem;
+  border: 1px solid var(--border);
+  background: linear-gradient(160deg, var(--card2) 0%, var(--card) 100%);
+  transition: transform 0.35s, box-shadow 0.35s, border-color 0.35s;
+  position: relative; overflow: hidden;
+}
+.product-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+.product-card.std::before { background: var(--std-grad); }
+.product-card.pro::before { background: var(--pro-grad); }
+.product-card:hover { transform: translateY(-6px); }
+.product-card.std { border-color: rgba(0,255,200,0.12); }
+.product-card.std:hover {
+  box-shadow: 0 24px 80px -20px rgba(0,255,200,0.2), 0 0 0 1px rgba(0,255,200,0.15);
+  border-color: rgba(0,255,200,0.25);
+}
+.product-card.pro { border-color: rgba(177,151,252,0.15); }
+.product-card.pro:hover {
+  box-shadow: 0 24px 80px -20px rgba(177,151,252,0.25), 0 0 0 1px rgba(177,151,252,0.2);
+  border-color: rgba(177,151,252,0.3);
+}
+.pc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+.pc-name {
+  font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; letter-spacing: -0.01em;
+}
+.pc-name.std { color: var(--teal); }
+.pc-name.pro { background: var(--pro-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.pc-badge {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+  padding: 0.25rem 0.65rem; border-radius: 100px;
+  text-transform: uppercase;
+}
+.pc-badge.std { background: rgba(0,255,200,0.1); color: var(--teal); border: 1px solid rgba(0,255,200,0.2); }
+.pc-badge.pro { background: rgba(177,151,252,0.12); color: var(--purple); border: 1px solid rgba(177,151,252,0.25); }
+.pc-desc { font-size: 0.9rem; color: var(--text2); line-height: 1.6; margin-bottom: 1.25rem; }
+.pc-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.pc-tag {
+  font-size: 0.72rem; font-family: var(--font-mono); font-weight: 500;
+  padding: 0.2rem 0.6rem; border-radius: 6px;
+  background: rgba(255,255,255,0.04); color: var(--text3);
+  border: 1px solid var(--border);
+}
+.product-connector {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; color: var(--text3); font-family: var(--font-mono);
+  letter-spacing: 0.05em; gap: 0.5rem;
+}
+.product-connector::before, .product-connector::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* ── Section base ──────────────────────────────────────────────── */
+section { padding: 7rem 2.5rem; position: relative; z-index: 1; }
+.section-inner { max-width: 1320px; margin: 0 auto; }
+.section-label {
+  display: inline-block; font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal);
+  margin-bottom: 1rem;
+}
+.section-label.pro-label { color: var(--purple); }
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  font-weight: 800; line-height: 1.07; letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+.section-sub {
+  font-size: 1.05rem; color: var(--text2); max-width: 580px; line-height: 1.75;
+}
+.section-header { margin-bottom: 4rem; }
+
+/* ── Divider ───────────────────────────────────────────────────── */
+.divider {
+  height: 1px; max-width: 1320px; margin: 0 auto;
+  background: linear-gradient(90deg, transparent, var(--border2), transparent);
+}
+
+/* ── Product comparison ────────────────────────────────────────── */
+.compare-section { background: var(--bg2); }
+.compare-section::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 1px; background: linear-gradient(90deg, transparent, rgba(0,255,200,0.3), transparent);
+}
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.compare-card {
+  border-radius: var(--radius); padding: 2.75rem;
+  border: 1px solid var(--border);
+  background: linear-gradient(160deg, var(--card2) 0%, var(--card) 100%);
+  position: relative; overflow: hidden; transition: all 0.35s;
+}
+.compare-card:hover { transform: translateY(-5px); }
+.compare-card.pro-card {
+  border-color: rgba(177,151,252,0.25);
+  box-shadow: 0 0 120px -40px rgba(177,151,252,0.2), inset 0 0 80px -60px rgba(177,151,252,0.08);
+}
+.compare-card.pro-card:hover {
+  box-shadow: 0 24px 100px -30px rgba(177,151,252,0.35), inset 0 0 80px -60px rgba(177,151,252,0.1);
+  border-color: rgba(177,151,252,0.4);
+}
+.compare-card.std-card {
+  border-color: rgba(0,255,200,0.18);
+  box-shadow: 0 0 80px -40px rgba(0,255,200,0.12), inset 0 0 60px -50px rgba(0,255,200,0.06);
+}
+.compare-card.std-card:hover {
+  box-shadow: 0 24px 100px -30px rgba(0,255,200,0.22), inset 0 0 60px -50px rgba(0,255,200,0.08);
+  border-color: rgba(0,255,200,0.32);
+}
+.compare-top-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.compare-top-bar.std { background: var(--std-grad); }
+.compare-top-bar.pro { background: var(--pro-grad); }
+.compare-eyebrow {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: 0.6rem;
+}
+.compare-eyebrow.std { color: var(--teal); }
+.compare-eyebrow.pro { color: var(--purple); }
+.compare-name {
+  font-family: var(--font-display); font-size: 2rem; font-weight: 800;
+  letter-spacing: -0.02em; margin-bottom: 0.75rem;
+}
+.compare-name.std { color: var(--text); }
+.compare-name.pro { background: var(--pro-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.compare-desc { font-size: 0.95rem; color: var(--text2); line-height: 1.7; margin-bottom: 2rem; }
+.compare-features { list-style: none; margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.6rem; }
+.compare-features li {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  font-size: 0.9rem; color: var(--text2);
+}
+.cf-check {
+  width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center; font-size: 0.65rem;
+}
+.cf-check.std { background: rgba(0,255,200,0.12); color: var(--teal); }
+.cf-check.pro { background: rgba(177,151,252,0.12); color: var(--purple); }
+.compare-cta {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.8rem 1.75rem; border-radius: var(--radius-sm);
+  font-size: 0.9rem; font-weight: 600; cursor: pointer;
+  border: none; transition: all 0.25s;
+}
+.compare-cta.std { background: var(--std-grad); color: #05080f; }
+.compare-cta.pro { background: var(--pro-grad); color: #fff; }
+.compare-cta:hover { transform: translateY(-2px); }
+.compare-cta.std:hover { box-shadow: 0 8px 30px rgba(0,255,200,0.25); }
+.compare-cta.pro:hover { box-shadow: 0 8px 30px rgba(177,151,252,0.3); }
+
+/* ── Rules section (v1) ────────────────────────────────────────── */
+.rules-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border-radius: var(--radius); overflow: hidden; }
+.rule-cat {
+  background: var(--card); padding: 1.75rem;
+  transition: background 0.2s;
+}
+.rule-cat:hover { background: var(--card2); }
+.rule-cat-icon { font-size: 1.5rem; margin-bottom: 1rem; }
+.rule-cat-name {
+  font-family: var(--font-display); font-size: 0.95rem; font-weight: 700;
+  margin-bottom: 0.4rem; color: var(--text);
+}
+.rule-cat-count {
+  font-family: var(--font-mono); font-size: 2.2rem; font-weight: 500;
+  background: var(--std-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 0.75rem; display: block; line-height: 1;
+}
+.rule-cat-desc { font-size: 0.82rem; color: var(--text3); line-height: 1.6; }
+.rule-samples { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.3rem; }
+.rule-sample {
+  font-size: 0.72rem; font-family: var(--font-mono);
+  color: var(--text3); padding: 0.2rem 0; border-top: 1px solid var(--border);
+}
+.rules-total-bar {
+  margin-top: 2rem; padding: 1.5rem 2rem;
+  background: var(--card); border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.rtb-number {
+  font-family: var(--font-display); font-size: 3rem; font-weight: 800;
+  background: var(--std-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.rtb-label { font-size: 0.85rem; color: var(--text2); max-width: 480px; }
+.tier-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.6rem; }
+.tier-pill {
+  font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.7rem; border-radius: 100px;
+  font-family: var(--font-mono);
+}
+.tier-pill.t1 { background: rgba(0,255,200,0.1); color: var(--teal); border: 1px solid rgba(0,255,200,0.2); }
+.tier-pill.t2 { background: rgba(240,180,41,0.1); color: var(--gold); border: 1px solid rgba(240,180,41,0.2); }
+.tier-pill.t3 { background: rgba(177,151,252,0.1); color: var(--purple); border: 1px solid rgba(177,151,252,0.2); }
+
+/* ── Agentic section (v2/Pro) ──────────────────────────────────── */
+.agentic-section {
+  background: var(--bg2);
+}
+.agentic-section::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(177,151,252,0.4), transparent);
+}
+.agentic-section::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(59,142,240,0.3), transparent);
+}
+.agentic-header { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: end; margin-bottom: 4rem; }
+.agentic-pro-badge {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.3rem 0.9rem; border-radius: 100px;
+  background: rgba(177,151,252,0.1); border: 1px solid rgba(177,151,252,0.25);
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--purple); margin-bottom: 1rem;
+}
+.agentic-header-right { padding-top: 1.5rem; }
+.agentic-header-right p { font-size: 1rem; color: var(--text2); line-height: 1.8; margin-bottom: 1.5rem; }
+.loop-diagram {
+  display: flex; flex-direction: column; gap: 0; background: var(--card);
+  border-radius: var(--radius); border: 1px solid rgba(177,151,252,0.2); overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 60px -30px rgba(177,151,252,0.15);
+}
+.loop-step {
+  display: flex; align-items: flex-start; gap: 1.25rem; padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border); transition: background 0.2s;
+  position: relative;
+}
+.loop-step:last-child { border-bottom: none; }
+.loop-step:hover { background: var(--card2); }
+.loop-step-num {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600;
+  background: rgba(177,151,252,0.12); color: var(--purple);
+  border: 1px solid rgba(177,151,252,0.28); margin-top: 1px;
+}
+.loop-step-content { flex: 1; }
+.loop-step-title { font-size: 0.88rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem; }
+.loop-step-desc { font-size: 0.8rem; color: var(--text3); line-height: 1.5; }
+.loop-step-tag {
+  font-size: 0.65rem; font-family: var(--font-mono); padding: 0.15rem 0.5rem;
+  border-radius: 4px; background: rgba(177,151,252,0.08); color: var(--purple);
+  border: 1px solid rgba(177,151,252,0.15); white-space: nowrap; flex-shrink: 0;
+}
+.agents-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.agent-card {
+  border-radius: var(--radius-sm); padding: 1.75rem;
+  background: linear-gradient(160deg, var(--card2) 0%, var(--card) 100%);
+  border: 1px solid var(--border);
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  position: relative; overflow: hidden;
+}
+.agent-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--pro-grad); opacity: 0; transition: opacity 0.3s;
+}
+.agent-card:hover {
+  border-color: rgba(177,151,252,0.35); transform: translateY(-4px);
+  box-shadow: 0 16px 60px -20px rgba(177,151,252,0.2);
+}
+.agent-card:hover::before { opacity: 1; }
+.agent-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+.agent-name { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; }
+.agent-desc { font-size: 0.8rem; color: var(--text3); line-height: 1.55; }
+
+/* ── RAG / Self-learning ───────────────────────────────────────── */
+.rag-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; }
+.rag-visual {
+  background: var(--card); border-radius: var(--radius); padding: 2rem;
+  border: 1px solid var(--border); position: relative; overflow: hidden;
+}
+.rag-visual::before {
+  content: ''; position: absolute; bottom: -60px; right: -60px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(177,151,252,0.12) 0%, transparent 70%);
+}
+.rag-label {
+  font-size: 0.72rem; font-family: var(--font-mono); font-weight: 600;
+  color: var(--purple); letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+.rag-cases { display: flex; flex-direction: column; gap: 0.5rem; }
+.rag-case {
+  display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem;
+  border-radius: 8px; background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border); font-size: 0.8rem;
+  transition: background 0.2s;
+}
+.rag-case:hover { background: rgba(255,255,255,0.04); }
+.rag-case-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.rag-case-dot.approved { background: var(--teal); }
+.rag-case-dot.rejected { background: var(--red); }
+.rag-case-dot.auto { background: var(--gold); }
+.rag-case-text { flex: 1; color: var(--text2); }
+.rag-case-outcome { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text3); }
+.rag-counter { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border); display: flex; gap: 2rem; }
+.rag-count { }
+.rag-count-num { font-family: var(--font-display); font-size: 1.75rem; font-weight: 800; background: var(--pro-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
+.rag-count-label { font-size: 0.75rem; color: var(--text3); }
+.rag-copy { }
+.rag-copy h3 { font-family: var(--font-display); font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.15; letter-spacing: -0.02em; }
+.rag-copy p { font-size: 0.95rem; color: var(--text2); line-height: 1.75; margin-bottom: 1rem; }
+
+/* ── Approval gate visual ──────────────────────────────────────── */
+.gate-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border-radius: var(--radius); overflow: hidden; margin-top: 2.5rem; }
+.gate-tier { background: var(--card); padding: 2rem; transition: background 0.2s; }
+.gate-tier:hover { background: var(--card2); }
+.gate-tier-num { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text3); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.gate-tier-name { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.6rem; }
+.gate-tier-name.t1 { color: var(--teal); }
+.gate-tier-name.t2 { color: var(--gold); }
+.gate-tier-name.t3 { color: var(--purple); }
+.gate-tier-action { font-size: 0.82rem; color: var(--text2); line-height: 1.6; margin-bottom: 1rem; }
+.gate-examples { display: flex; flex-direction: column; gap: 0.3rem; }
+.gate-ex { font-size: 0.73rem; color: var(--text3); font-family: var(--font-mono); padding: 0.2rem 0; border-top: 1px solid var(--border); }
+
+/* ── Interactive Demo ──────────────────────────────────────────── */
+.demo-section { }
+.demo-container {
+  background: var(--card); border-radius: var(--radius);
+  border: 1px solid rgba(0,255,200,0.18);
+  overflow: hidden;
+  box-shadow: 0 0 120px -40px rgba(0,255,200,0.15), inset 0 0 80px -60px rgba(0,255,200,0.04);
+}
+.demo-topbar {
+  background: var(--bg3); padding: 0.75rem 1.25rem;
+  display: flex; align-items: center; gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.demo-circles { display: flex; gap: 6px; }
+.demo-circles span { width: 11px; height: 11px; border-radius: 50%; }
+.demo-circles span:nth-child(1) { background: #f05252; }
+.demo-circles span:nth-child(2) { background: var(--gold); }
+.demo-circles span:nth-child(3) { background: var(--teal); }
+.demo-url-bar {
+  flex: 1; background: var(--bg); padding: 0.3rem 1rem; border-radius: 6px;
+  font-family: var(--font-mono); font-size: 0.72rem; color: var(--text3);
+}
+.demo-body { display: grid; grid-template-columns: 1fr 1.4fr; min-height: 480px; }
+.demo-chat { padding: 1.5rem; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+.demo-chat-header { font-size: 0.72rem; font-weight: 700; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.25rem; }
+.demo-prompts { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
+.demo-prompt {
+  padding: 0.65rem 1rem; border-radius: 8px;
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  font-size: 0.82rem; color: var(--text2); cursor: pointer;
+  transition: all 0.2s; text-align: left;
+}
+.demo-prompt:hover { background: rgba(0,255,200,0.06); border-color: rgba(0,255,200,0.2); color: var(--text); }
+.demo-prompt.active { background: rgba(0,255,200,0.08); border-color: rgba(0,255,200,0.3); color: var(--teal); }
+.demo-input-row { display: flex; gap: 0.5rem; margin-top: auto; }
+.demo-input {
+  flex: 1; background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 0.6rem 0.9rem;
+  font-family: var(--font-body); font-size: 0.82rem; color: var(--text);
+  outline: none; transition: border-color 0.2s;
+}
+.demo-input:focus { border-color: rgba(0,255,200,0.3); }
+.demo-send {
+  padding: 0.6rem 1rem; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+  background: var(--std-grad); color: #05080f; border: none; cursor: pointer;
+  transition: opacity 0.2s;
+}
+.demo-send:hover { opacity: 0.9; }
+.demo-response { padding: 1.5rem; overflow-y: auto; }
+.demo-response-header { font-size: 0.72rem; font-weight: 700; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.25rem; }
+.demo-output { display: none; }
+.demo-output.active { display: block; animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.demo-thinking {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.8rem; color: var(--text3); margin-bottom: 1rem;
+  font-family: var(--font-mono);
+}
+.demo-thinking-dots span {
+  display: inline-block; width: 4px; height: 4px; border-radius: 50%;
+  background: var(--teal); margin: 0 1px;
+  animation: dotBounce 1.2s infinite;
+}
+.demo-thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+.demo-thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dotBounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-5px)} }
+.demo-finding {
+  background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem;
+}
+.demo-finding-label { font-size: 0.68rem; font-family: var(--font-mono); color: var(--text3); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.08em; }
+.demo-finding-title { font-size: 0.88rem; font-weight: 600; color: var(--text); margin-bottom: 0.35rem; }
+.demo-finding-detail { font-size: 0.78rem; color: var(--text2); line-height: 1.5; }
+.demo-saving { font-family: var(--font-mono); font-size: 0.9rem; color: var(--teal); font-weight: 600; margin-top: 0.4rem; }
+.demo-terraform {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 1rem; margin-top: 0.75rem;
+  font-family: var(--font-mono); font-size: 0.72rem; color: var(--text2);
+  line-height: 1.6; overflow-x: auto;
+}
+.tf-keyword { color: var(--purple); }
+.tf-string { color: var(--teal); }
+.tf-comment { color: var(--text3); }
+
+/* ── Beta CTA ──────────────────────────────────────────────────── */
+.beta-section {
+  background: var(--bg2);
+  text-align: center;
+}
+.beta-section::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(177,151,252,0.5), rgba(96,165,250,0.5), transparent);
+}
+.beta-glow {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 900px; height: 500px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(ellipse, rgba(177,151,252,0.12) 0%, rgba(96,165,250,0.06) 40%, transparent 70%);
+  filter: blur(2px);
+}
+.beta-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; letter-spacing: -0.025em; margin-bottom: 1rem; line-height: 1.1; }
+.beta-title span { background: var(--pro-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.beta-sub { font-size: 1rem; color: var(--text2); max-width: 480px; margin: 0 auto 2.5rem; line-height: 1.75; }
+.beta-form { display: flex; gap: 0.75rem; max-width: 480px; margin: 0 auto; justify-content: center; flex-wrap: wrap; }
+.beta-input {
+  flex: 1; min-width: 240px; background: var(--card); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); padding: 0.8rem 1.25rem;
+  font-family: var(--font-body); font-size: 0.9rem; color: var(--text);
+  outline: none; transition: border-color 0.2s;
+}
+.beta-input:focus { border-color: rgba(177,151,252,0.4); }
+.beta-input::placeholder { color: var(--text3); }
+.beta-submit {
+  padding: 0.8rem 1.75rem; border-radius: var(--radius-sm);
+  font-size: 0.9rem; font-weight: 600; cursor: pointer;
+  background: var(--pro-grad); color: #fff; border: none;
+  transition: all 0.25s;
+}
+.beta-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(177,151,252,0.3); }
+.beta-note { font-size: 0.78rem; color: var(--text3); margin-top: 1rem; }
+
+/* ── Pricing ───────────────────────────────────────────────────── */
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.pricing-card {
+  border-radius: var(--radius); padding: 2.25rem;
+  background: var(--card); border: 1px solid var(--border);
+  position: relative; overflow: hidden; transition: all 0.3s;
+}
+.pricing-card:hover { transform: translateY(-4px); }
+.pricing-card.featured {
+  border-color: rgba(177,151,252,0.3);
+  box-shadow: 0 0 100px -30px rgba(177,151,252,0.25), inset 0 0 60px -50px rgba(177,151,252,0.07);
+}
+.pricing-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.pricing-top-bar.std { background: var(--std-grad); }
+.pricing-top-bar.pro { background: var(--pro-grad); }
+.pricing-top-bar.ent { background: linear-gradient(90deg, var(--gold), #f0702a); }
+.pricing-tier-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.pricing-tier-label.std { color: var(--teal); }
+.pricing-tier-label.pro { color: var(--purple); }
+.pricing-tier-label.ent { color: var(--gold); }
+.pricing-name { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; margin-bottom: 0.4rem; }
+.pricing-price { margin-bottom: 0.4rem; }
+.pricing-amount { font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; }
+.pricing-amount.std { color: var(--teal); }
+.pricing-amount.pro { background: var(--pro-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.pricing-period { font-size: 0.85rem; color: var(--text3); }
+.pricing-desc { font-size: 0.85rem; color: var(--text2); margin-bottom: 1.75rem; line-height: 1.6; }
+.pricing-features-list { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; margin-bottom: 2rem; }
+.pricing-features-list li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.85rem; color: var(--text2); }
+.pfl-icon { flex-shrink: 0; margin-top: 1px; font-size: 0.75rem; }
+.pfl-icon.std { color: var(--teal); }
+.pfl-icon.pro { color: var(--purple); }
+.pfl-icon.ent { color: var(--gold); }
+.pricing-btn {
+  display: block; width: 100%; padding: 0.8rem; border-radius: var(--radius-sm);
+  font-size: 0.9rem; font-weight: 600; cursor: pointer; border: none;
+  text-align: center; transition: all 0.25s;
+}
+.pricing-btn.std { background: var(--std-grad); color: #05080f; }
+.pricing-btn.pro { background: var(--pro-grad); color: #fff; }
+.pricing-btn.ent { background: rgba(240,180,41,0.1); color: var(--gold); border: 1px solid rgba(240,180,41,0.3); }
+.pricing-btn:hover { transform: translateY(-2px); }
+.pricing-btn.std:hover { box-shadow: 0 6px 24px rgba(0,255,200,0.25); }
+.pricing-btn.pro:hover { box-shadow: 0 6px 24px rgba(177,151,252,0.3); }
+.pricing-featured-badge {
+  position: absolute; top: -1px; right: 1.5rem;
+  font-size: 0.68rem; font-weight: 700; padding: 0.3rem 0.8rem;
+  background: var(--pro-grad); color: #fff; border-radius: 0 0 8px 8px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+/* ── Footer ────────────────────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border); padding: 3rem 2.5rem;
+  position: relative; z-index: 1;
+}
+.footer-inner { max-width: 1320px; margin: 0 auto; display: grid; grid-template-columns: 1.5fr repeat(3,1fr); gap: 3rem; }
+.footer-brand { }
+.footer-logo {
+  display: flex; align-items: center; gap: 0.6rem;
+  font-family: var(--font-display); font-weight: 800; font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+.footer-logo-mark { width: 28px; height: 28px; border-radius: 7px; background: var(--std-grad); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 900; color: #05080f; }
+.footer-tagline { font-size: 0.85rem; color: var(--text3); line-height: 1.6; max-width: 260px; }
+.footer-col h5 { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); margin-bottom: 1rem; }
+.footer-col a { display: block; font-size: 0.85rem; color: var(--text2); margin-bottom: 0.5rem; transition: color 0.2s; }
+.footer-col a:hover { color: var(--teal); }
+.footer-bottom { max-width: 1320px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.footer-copy { font-size: 0.8rem; color: var(--text3); }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a { font-size: 0.8rem; color: var(--text3); transition: color 0.2s; }
+.footer-links a:hover { color: var(--text2); }
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media(max-width:1024px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .compare-grid { grid-template-columns: 1fr; max-width: 560px; margin: 0 auto; }
+  .agentic-header { grid-template-columns: 1fr; gap: 2rem; }
+  .rag-row { grid-template-columns: 1fr; gap: 2.5rem; }
+  .rules-grid { grid-template-columns: repeat(2,1fr); }
+  .agents-grid { grid-template-columns: repeat(2,1fr); }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+  .demo-body { grid-template-columns: 1fr; }
+  .demo-chat { border-right: none; border-bottom: 1px solid var(--border); }
+}
+@media(max-width:768px) {
+  .nav-links { display: none; }
+  .rules-grid { grid-template-columns: 1fr; }
+  .agents-grid { grid-template-columns: 1fr; }
+  .gate-grid { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+}
+
+/* ── Animations ────────────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-noise"></div>
+<div class="bg-orb-1"></div>
+<div class="bg-orb-2"></div>
+<div class="bg-orb-3"></div>
+
+<!-- ── NAV ─────────────────────────────────────────────────────── -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-mark">F</div>
+      <span class="nav-logo-text">FinOps<span>Mind</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="#platform">Platform</a>
+      <a href="#rules">Rules Engine</a>
+      <a href="#pro">Pro Agent</a>
+      <a href="#pricing">Pricing</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="nav-right">
+      <button class="nav-sign-in">Sign in</button>
+      <a href="#beta" class="btn-nav-pro">Get Pro Access ↗</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-glow-1"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="hero-eyebrow">
+        <span class="hero-dot"></span>
+        Now in beta — FinOpsMind Pro
+      </div>
+      <h1>Cloud costs,<br><em>understood.</em><br>Then <span class="pro-em">autonomous.</span></h1>
+      <p class="hero-sub">Start with 56 rules and instant Terraform. Graduate to an agentic AI that reasons, learns from your decisions, and acts — with your approval.</p>
+      <div class="hero-ctas">
+        <button class="btn-primary" onclick="document.getElementById('demo-section').scrollIntoView({behavior:'smooth'})">
+          Try the demo →
+        </button>
+        <a href="#beta" class="btn-pro">Join Pro Beta</a>
+        <a href="about.html" class="btn-ghost">Learn more</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">56</div>
+          <div class="stat-label">Optimisation rules</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Cloud providers</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">AI</div>
+          <div class="stat-label">Agentic engine</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual reveal">
+      <div class="product-cards">
+        <div class="product-card std">
+          <div class="pc-header">
+            <div class="pc-name std">FinOpsMind</div>
+            <span class="pc-badge std">Available now</span>
+          </div>
+          <p class="pc-desc">Rules-based cost intelligence with instant Terraform remediation. Connect your AWS, Azure or GCP account and get actionable recommendations in minutes.</p>
+          <div class="pc-tags">
+            <span class="pc-tag">56 rules</span>
+            <span class="pc-tag">Terraform generation</span>
+            <span class="pc-tag">Multi-cloud</span>
+            <span class="pc-tag">Cost anomaly detection</span>
+            <span class="pc-tag">Budget alerts</span>
+          </div>
+        </div>
+        <div class="product-connector">upgrades to</div>
+        <div class="product-card pro">
+          <div class="pc-header">
+            <div class="pc-name pro">FinOpsMind Pro</div>
+            <span class="pc-badge pro">Beta — join waitlist</span>
+          </div>
+          <p class="pc-desc">An agentic AI that reasons across your entire cloud estate, retrieves similar past cases, and autonomously executes or escalates — with a full audit trail.</p>
+          <div class="pc-tags">
+            <span class="pc-tag">Claude-powered</span>
+            <span class="pc-tag">RAG self-learning</span>
+            <span class="pc-tag">Approval gate</span>
+            <span class="pc-tag">Slack integration</span>
+            <span class="pc-tag">Chain-of-thought audit</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRODUCT COMPARISON ──────────────────────────────────────── -->
+<section class="compare-section" id="platform">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-label">Two products. One platform.</div>
+      <h2 class="section-title">Rules today.<br>Autonomous tomorrow.</h2>
+      <p class="section-sub">FinOpsMind Standard gives your team instant cost intelligence. FinOpsMind Pro gives it an AI agent that gets smarter every time you approve or reject a recommendation.</p>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-card std-card reveal">
+        <div class="compare-top-bar std"></div>
+        <div class="compare-eyebrow std">FinOpsMind Standard</div>
+        <div class="compare-name std">Rules-based<br>intelligence.</div>
+        <p class="compare-desc">Connect your cloud accounts. Get 56 automated recommendations with generated Terraform, severity scoring, and multi-cloud support — all within minutes.</p>
+        <ul class="compare-features">
+          <li><span class="cf-check std">✓</span>48 AWS + 4 Azure + 4 GCP optimisation rules</li>
+          <li><span class="cf-check std">✓</span>Auto-generated Terraform HCL for every finding</li>
+          <li><span class="cf-check std">✓</span>Cost anomaly detection with root cause analysis</li>
+          <li><span class="cf-check std">✓</span>ETS time-series spend forecasting</li>
+          <li><span class="cf-check std">✓</span>Budget alerts and policy compliance</li>
+          <li><span class="cf-check std">✓</span>CI/CD pipeline push for approved remediations</li>
+          <li><span class="cf-check std">✓</span>Executive summary and carbon emissions reports</li>
+          <li><span class="cf-check std">✓</span>WebSocket real-time notifications</li>
+        </ul>
+        <button class="compare-cta std">Request access →</button>
+      </div>
+      <div class="compare-card pro-card reveal">
+        <div class="compare-top-bar pro"></div>
+        <div class="compare-eyebrow pro">FinOpsMind Pro</div>
+        <div class="compare-name pro">Agentic AI.<br>Self-learning.</div>
+        <p class="compare-desc">Everything in Standard, plus a Claude-powered orchestrator that reasons across your cloud estate, retrieves similar past cases from memory, and autonomously executes or escalates with full audit trail.</p>
+        <ul class="compare-features">
+          <li><span class="cf-check pro">✓</span>Everything in Standard</li>
+          <li><span class="cf-check pro">✓</span>Claude Sonnet agentic orchestrator with chain-of-thought</li>
+          <li><span class="cf-check pro">✓</span>9 registered AI tools callable by the agent</li>
+          <li><span class="cf-check pro">✓</span>RAG memory — learns from every decision you make</li>
+          <li><span class="cf-check pro">✓</span>Tier 1/2/3 approval gate with configurable thresholds</li>
+          <li><span class="cf-check pro">✓</span>Slack Block Kit approval notifications with one-click approve/reject</li>
+          <li><span class="cf-check pro">✓</span>Full reasoning trace stored for every analysis</li>
+          <li><span class="cf-check pro">✓</span>50 pre-seeded case library, grows with your usage</li>
+        </ul>
+        <a href="#beta" class="compare-cta pro">Join the Pro beta →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── RULES ENGINE ─────────────────────────────────────────────── -->
+<section id="rules">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-label">Rules engine</div>
+      <h2 class="section-title">56 rules. Three clouds.<br>Every tier of risk.</h2>
+      <p class="section-sub">From one-click safe fixes to architectural migration recommendations — every rule generates Terraform and carries a severity, savings estimate and confidence score.</p>
+    </div>
+    <div class="rules-grid reveal">
+      <div class="rule-cat">
+        <div class="rule-cat-icon">🗑️</div>
+        <div class="rule-cat-name">Resource Waste</div>
+        <span class="rule-cat-count">18</span>
+        <div class="rule-cat-desc">Idle, unattached, and orphaned resources bleeding money silently.</div>
+        <div class="rule-samples">
+          <div class="rule-sample">idle_ec2 · unattached_ebs</div>
+          <div class="rule-sample">old_snapshots · idle_eip</div>
+          <div class="rule-sample">unused_ecr · idle_elb</div>
+        </div>
+      </div>
+      <div class="rule-cat">
+        <div class="rule-cat-icon">⚙️</div>
+        <div class="rule-cat-name">Right-sizing</div>
+        <span class="rule-cat-count">15</span>
+        <div class="rule-cat-desc">OS migrations, Graviton, Fargate, Aurora Serverless — architecture-level savings.</div>
+        <div class="rule-samples">
+          <div class="rule-sample">graviton_migration · windows_to_linux</div>
+          <div class="rule-sample">aurora_serverless_candidate</div>
+          <div class="rule-sample">ecs_ec2_to_fargate · spot_candidate</div>
+        </div>
+      </div>
+      <div class="rule-cat">
+        <div class="rule-cat-icon">🏗️</div>
+        <div class="rule-cat-name">Architecture</div>
+        <span class="rule-cat-count">13</span>
+        <div class="rule-cat-desc">CloudFront, VPC endpoints, cross-AZ transfer, EKS rightsizing and more.</div>
+        <div class="rule-samples">
+          <div class="rule-sample">cloudfront_missing_s3</div>
+          <div class="rule-sample">vpc_endpoint_s3_dynamo</div>
+          <div class="rule-sample">eks_node_rightsizing</div>
+        </div>
+      </div>
+      <div class="rule-cat">
+        <div class="rule-cat-icon">💳</div>
+        <div class="rule-cat-name">Commitments</div>
+        <span class="rule-cat-count">10</span>
+        <div class="rule-cat-desc">Reserved Instances, Savings Plans, RI expiry, convertible RI analysis.</div>
+        <div class="rule-samples">
+          <div class="rule-sample">reserved_instance_coverage</div>
+          <div class="rule-sample">savings_plan_gap · ri_expiry_alert</div>
+          <div class="rule-sample">ri_commitment_optimiser</div>
+        </div>
+      </div>
+    </div>
+    <div class="rules-total-bar reveal">
+      <div>
+        <div class="rtb-number">56</div>
+        <div style="font-size:0.8rem;color:var(--text3);margin-top:0.2rem">rules across AWS · Azure · GCP</div>
+      </div>
+      <div class="rtb-label">
+        Every rule generates Terraform HCL. In Pro mode, rules become AI tools — the agent decides which to invoke based on your query.
+        <div class="tier-pills" style="margin-top:0.75rem">
+          <span class="tier-pill t1">Tier 1: Auto-execute</span>
+          <span class="tier-pill t2">Tier 2: Auto + undo window</span>
+          <span class="tier-pill t3">Tier 3: Approval required</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── AGENTIC / PRO ─────────────────────────────────────────────── -->
+<section class="agentic-section" id="pro">
+  <div class="section-inner">
+    <div class="agentic-header">
+      <div class="reveal">
+        <div class="agentic-pro-badge">⚡ FinOpsMind Pro</div>
+        <h2 class="section-title">An agent that<br>reasons. Learns.<br>Acts.</h2>
+        <p style="font-size:1rem;color:var(--text2);line-height:1.75;margin-top:1rem;max-width:480px">Not another dashboard. A Claude-powered orchestrator that asks your data questions, retrieves similar past cases from memory, and produces a chain-of-thought reasoning trace before recommending anything.</p>
+      </div>
+      <div class="reveal">
+        <div class="loop-diagram">
+          <div class="loop-step">
+            <div class="loop-step-num">1</div>
+            <div class="loop-step-content">
+              <div class="loop-step-title">You ask in plain English</div>
+              <div class="loop-step-desc">"What are my biggest savings opportunities this month?"</div>
+            </div>
+            <span class="loop-step-tag">POST /analyse</span>
+          </div>
+          <div class="loop-step">
+            <div class="loop-step-num">2</div>
+            <div class="loop-step-content">
+              <div class="loop-step-title">Context assembled from your data</div>
+              <div class="loop-step-desc">Spend, anomalies, inventory, budgets — compressed to &lt;2k tokens</div>
+            </div>
+            <span class="loop-step-tag">Rust · PostgreSQL</span>
+          </div>
+          <div class="loop-step">
+            <div class="loop-step-num">3</div>
+            <div class="loop-step-content">
+              <div class="loop-step-title">Past cases retrieved from memory</div>
+              <div class="loop-step-desc">Similar historical decisions surface via vector search (Qdrant)</div>
+            </div>
+            <span class="loop-step-tag">RAG · voyage-3</span>
+          </div>
+          <div class="loop-step">
+            <div class="loop-step-num">4</div>
+            <div class="loop-step-content">
+              <div class="loop-step-title">Agent reasons and calls tools</div>
+              <div class="loop-step-desc">Claude Sonnet loops through 9 registered tools — cost, inventory, Terraform</div>
+            </div>
+            <span class="loop-step-tag">Claude · tool_use</span>
+          </div>
+          <div class="loop-step">
+            <div class="loop-step-num">5</div>
+            <div class="loop-step-content">
+              <div class="loop-step-title">Risk scored. Gate applied.</div>
+              <div class="loop-step-desc">Auto-execute below threshold. Slack approval above it.</div>
+            </div>
+            <span class="loop-step-tag">Approval gate</span>
+          </div>
+          <div class="loop-step">
+            <div class="loop-step-num">6</div>
+            <div class="loop-step-content">
+              <div class="loop-step-title">Decision stored to memory</div>
+              <div class="loop-step-desc">Your approval or rejection teaches the system for next time</div>
+            </div>
+            <span class="loop-step-tag">Qdrant · self-learning</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agents -->
+    <h3 style="font-family:var(--font-display);font-size:1.4rem;font-weight:700;margin-bottom:1.5rem;letter-spacing:-0.01em" class="reveal">What the agent can do</h3>
+    <div class="agents-grid reveal">
+      <div class="agent-card">
+        <div class="agent-icon">🔍</div>
+        <div class="agent-name">Cost Anomaly Detective</div>
+        <div class="agent-desc">Correlates spend spikes with deployment events, config changes, and traffic patterns to find the actual root cause.</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">⚡</div>
+        <div class="agent-name">Infrastructure Optimiser</div>
+        <div class="agent-desc">Invokes the 56-rule engine as tools, generates Terraform, scores risk, and auto-executes or escalates each finding.</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">📊</div>
+        <div class="agent-name">Forecast & Budget Guardian</div>
+        <div class="agent-desc">Rolling 30/60/90-day projections per team, with autonomous Slack alerts when velocity exceeds budget runway.</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">🏷️</div>
+        <div class="agent-name">Tag Compliance Sheriff</div>
+        <div class="agent-desc">Scans every resource, infers missing tags from context, auto-fixes what it's confident about, raises tickets for ambiguous cases.</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">🌍</div>
+        <div class="agent-name">Carbon Agent</div>
+        <div class="agent-desc">Translates spend into CO₂e, recommends lower-carbon region migrations, generates ESG-ready reports.</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">💬</div>
+        <div class="agent-name">FinOps Advisor</div>
+        <div class="agent-desc">The natural language front door. Ask anything — it decomposes your question into parallel tool calls and streams back a synthesised answer.</div>
+      </div>
+    </div>
+
+    <!-- Approval gate -->
+    <div style="margin-top:4rem" class="reveal">
+      <div class="section-label pro-label">Approval gate</div>
+      <h3 style="font-family:var(--font-display);font-size:1.8rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:0.75rem">The agent asks permission<br>for the things that matter.</h3>
+      <p style="font-size:0.95rem;color:var(--text2);max-width:560px;line-height:1.75;margin-bottom:0">Tier 1 actions execute automatically. Tier 2 executes with a rollback window. Tier 3 — or anything above your risk or savings threshold — goes to Slack for your approval. Everything is logged.</p>
+    </div>
+    <div class="gate-grid reveal">
+      <div class="gate-tier">
+        <div class="gate-tier-num">Tier 1</div>
+        <div class="gate-tier-name t1">Auto-execute</div>
+        <div class="gate-tier-action">Executed immediately, no human required. Low risk, easily reversible. You are notified after.</div>
+        <div class="gate-examples">
+          <div class="gate-ex">vpc_endpoint_s3_dynamo</div>
+          <div class="gate-ex">cloudwatch_log_retention</div>
+          <div class="gate-ex">gp2_to_gp3 · lambda_memory</div>
+          <div class="gate-ex">rds_storage_autoscaling</div>
+        </div>
+      </div>
+      <div class="gate-tier">
+        <div class="gate-tier-num">Tier 2</div>
+        <div class="gate-tier-name t2">Auto + undo window</div>
+        <div class="gate-tier-action">Applied automatically, but you receive a Slack notification with a rollback option for a configurable window.</div>
+        <div class="gate-examples">
+          <div class="gate-ex">graviton_migration</div>
+          <div class="gate-ex">scheduled_shutdown</div>
+          <div class="gate-ex">spot_instance_candidate</div>
+          <div class="gate-ex">fargate_rightsizing</div>
+        </div>
+      </div>
+      <div class="gate-tier">
+        <div class="gate-tier-num">Tier 3</div>
+        <div class="gate-tier-name t3">Approval required</div>
+        <div class="gate-tier-action">Requires explicit approval before execution. High architectural impact, commercial decisions, or above your savings threshold.</div>
+        <div class="gate-examples">
+          <div class="gate-ex">sql_server_to_postgres</div>
+          <div class="gate-ex">windows_to_linux</div>
+          <div class="gate-ex">reserved_instance_coverage</div>
+          <div class="gate-ex">aurora_serverless_candidate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── RAG / SELF-LEARNING ──────────────────────────────────────── -->
+<section>
+  <div class="section-inner">
+    <div class="rag-row">
+      <div class="rag-visual reveal">
+        <div class="rag-label">[ RAG Memory — Qdrant ]</div>
+        <div class="rag-cases">
+          <div class="rag-case">
+            <div class="rag-case-dot approved"></div>
+            <div class="rag-case-text">EC2 M5.xlarge → M7g.xlarge (Graviton), prod-api cluster</div>
+            <div class="rag-case-outcome">approved · £840/mo</div>
+          </div>
+          <div class="rag-case">
+            <div class="rag-case-dot rejected"></div>
+            <div class="rag-case-text">RDS SQL Server → Aurora PostgreSQL migration</div>
+            <div class="rag-case-outcome">rejected · too risky</div>
+          </div>
+          <div class="rag-case">
+            <div class="rag-case-dot auto"></div>
+            <div class="rag-case-text">27 EBS gp2 volumes → gp3 upgrade across eu-west-1</div>
+            <div class="rag-case-outcome">auto-exec · £240/mo</div>
+          </div>
+          <div class="rag-case">
+            <div class="rag-case-dot approved"></div>
+            <div class="rag-case-text">Savings Plan gap — 3yr all-upfront for EC2 family</div>
+            <div class="rag-case-outcome">approved · £3,200/mo</div>
+          </div>
+          <div class="rag-case">
+            <div class="rag-case-dot rejected"></div>
+            <div class="rag-case-text">Shut down dev RDS instances overnight (scheduled)</div>
+            <div class="rag-case-outcome">rejected · dev team objects</div>
+          </div>
+          <div class="rag-case">
+            <div class="rag-case-dot auto"></div>
+            <div class="rag-case-text">VPC Gateway Endpoints for S3 + DynamoDB</div>
+            <div class="rag-case-outcome">auto-exec · £0 cost</div>
+          </div>
+        </div>
+        <div class="rag-counter">
+          <div class="rag-count">
+            <div class="rag-count-num">50+</div>
+            <div class="rag-count-label">cases pre-loaded</div>
+          </div>
+          <div class="rag-count">
+            <div class="rag-count-num">∞</div>
+            <div class="rag-count-label">grows with usage</div>
+          </div>
+          <div class="rag-count">
+            <div class="rag-count-num">1,024</div>
+            <div class="rag-count-label">vector dimensions</div>
+          </div>
+        </div>
+      </div>
+      <div class="rag-copy reveal">
+        <div class="section-label pro-label">Self-learning RAG</div>
+        <h2 class="section-title" style="font-size:2rem">Gets smarter with every decision you make.</h2>
+        <p>Every analysis result is embedded and stored in Qdrant. When a similar situation arises, the agent retrieves past cases — including your rejections — before making a recommendation.</p>
+        <p>Reject a suggestion once and the system learns your risk appetite. Approve it and it applies the same logic more confidently next time. No retraining. No manual configuration.</p>
+        <div style="margin-top:1.5rem;display:flex;flex-direction:column;gap:0.5rem">
+          <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.85rem;color:var(--text2)">
+            <span style="color:var(--purple);font-size:1rem">◆</span> Vector similarity search — voyage-3 embeddings via Anthropic
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.85rem;color:var(--text2)">
+            <span style="color:var(--purple);font-size:1rem">◆</span> Qdrant collection pre-seeded with 50 realistic FinOps cases
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.85rem;color:var(--text2)">
+            <span style="color:var(--purple);font-size:1rem">◆</span> Every approve/reject decision stored with reason
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.85rem;color:var(--text2)">
+            <span style="color:var(--purple);font-size:1rem">◆</span> Reasoning trace auditable — observation → hypothesis → recommendation
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── INTERACTIVE DEMO ─────────────────────────────────────────── -->
+<section id="demo-section">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-label">Live demo</div>
+      <h2 class="section-title">Ask the FinOpsMind agent.</h2>
+      <p class="section-sub">Powered by Claude. Working against a realistic mock AWS account. Ask anything about costs, waste, or savings.</p>
+    </div>
+    <div class="demo-container reveal">
+      <div class="demo-topbar">
+        <div class="demo-circles"><span></span><span></span><span></span></div>
+        <div class="demo-url-bar">app.finopsmind.cloud — AI Agent ⚡ Pro</div>
+      </div>
+      <div class="demo-body">
+        <div class="demo-chat">
+          <div class="demo-chat-header">[ Suggested prompts ]</div>
+          <div class="demo-prompts">
+            <button class="demo-prompt" onclick="runDemo(0)">Why did my costs spike 40% last month?</button>
+            <button class="demo-prompt" onclick="runDemo(1)">What can be auto-fixed right now?</button>
+            <button class="demo-prompt" onclick="runDemo(2)">Show me my biggest waste areas</button>
+            <button class="demo-prompt" onclick="runDemo(3)">What needs my approval before we act?</button>
+          </div>
+          <div class="demo-input-row">
+            <input class="demo-input" id="demo-custom" placeholder="Ask anything about your AWS costs..." onkeydown="if(event.key==='Enter')runCustomDemo()">
+            <button class="demo-send" onclick="runCustomDemo()">Ask</button>
+          </div>
+        </div>
+        <div class="demo-response">
+          <div class="demo-response-header">[ Agent response ]</div>
+
+          <div class="demo-output" id="demo-0">
+            <div class="demo-thinking">
+              <span>Analysing cost trend</span>
+              <span class="demo-thinking-dots"><span></span><span></span><span></span></span>
+            </div>
+            <div class="demo-finding">
+              <div class="demo-finding-label">observation</div>
+              <div class="demo-finding-title">EC2 spend increased £4,200 in 14 days</div>
+              <div class="demo-finding-detail">Three new m5.4xlarge instances launched in eu-west-1 on 28 March with no corresponding deployment tag. No traffic increase detected in ALB metrics for the same period.</div>
+            </div>
+            <div class="demo-finding">
+              <div class="demo-finding-label">hypothesis → evidence → recommendation</div>
+              <div class="demo-finding-title">Likely abandoned load test environment — not production traffic</div>
+              <div class="demo-finding-detail">CloudTrail shows instances launched by user jenkins-automation at 02:14 UTC. No termination event. Similar case in memory: load test environment left running — approved for shutdown, saved £1,800/month.</div>
+              <div class="demo-saving">Estimated saving: £3,800/month · Risk score: 62 · Tier 2 — auto-execute with undo window</div>
+            </div>
+            <div class="demo-terraform">
+<span class="tf-comment"># Generated by FinOpsMind Agent — Terraform remediation</span>
+<span class="tf-keyword">resource</span> <span class="tf-string">"aws_instance"</span> <span class="tf-string">"load_test_cleanup"</span> {
+  <span class="tf-keyword">instance_state</span> = <span class="tf-string">"stopped"</span>
+  <span class="tf-keyword">instance_ids</span>   = [<span class="tf-string">"i-0a1b2c3d"</span>, <span class="tf-string">"i-0e5f6g7h"</span>, <span class="tf-string">"i-0i9j0k1l"</span>]
+}</div>
+          </div>
+
+          <div class="demo-output" id="demo-1">
+            <div class="demo-finding">
+              <div class="demo-finding-label">Tier 1 — Auto-executable right now (no approval needed)</div>
+              <div class="demo-finding-title">14 EBS gp2 volumes → gp3 upgrade</div>
+              <div class="demo-finding-detail">All 14 volumes in us-east-1 and eu-west-1. gp3 is 20% cheaper with better baseline performance. Zero downtime. Reversible in seconds.</div>
+              <div class="demo-saving">£180/month · Confidence: 0.99 · Auto-executing now →</div>
+            </div>
+            <div class="demo-finding">
+              <div class="demo-finding-label">Tier 1 — Auto-executable</div>
+              <div class="demo-finding-title">VPC Gateway Endpoints for S3 + DynamoDB</div>
+              <div class="demo-finding-detail">High S3 traffic routing via NAT Gateway detected in 2 VPCs. Gateway endpoints are free and eliminate that NAT processing cost entirely.</div>
+              <div class="demo-saving">£340/month · Confidence: 0.97 · Auto-executing now →</div>
+            </div>
+            <div class="demo-finding">
+              <div class="demo-finding-label">Tier 1 — Auto-executable</div>
+              <div class="demo-finding-title">7 Lambda functions: x86 → arm64 (Graviton2)</div>
+              <div class="demo-finding-detail">Functions on x86_64 with no OS-specific dependencies. arm64 is 20% cheaper at same performance tier.</div>
+              <div class="demo-saving">£95/month · Confidence: 0.94 · Auto-executing now →</div>
+            </div>
+          </div>
+
+          <div class="demo-output" id="demo-2">
+            <div class="demo-finding">
+              <div class="demo-finding-label">Biggest waste area #1 — EC2</div>
+              <div class="demo-finding-title">6 instances with &lt;5% CPU for 21+ days</div>
+              <div class="demo-finding-detail">Largest offender: r5.2xlarge in eu-west-1, running since January, zero incoming connections for 21 days. Likely a forgotten staging environment.</div>
+              <div class="demo-saving">£1,240/month combined · Tier 2</div>
+            </div>
+            <div class="demo-finding">
+              <div class="demo-finding-label">Biggest waste area #2 — RDS</div>
+              <div class="demo-finding-title">Multi-AZ enabled on 3 non-production databases</div>
+              <div class="demo-finding-detail">Three RDS instances tagged "staging" with Multi-AZ enabled — doubles the instance cost with no HA requirement in staging.</div>
+              <div class="demo-saving">£680/month combined · Tier 1</div>
+            </div>
+            <div class="demo-finding">
+              <div class="demo-finding-label">Biggest waste area #3 — Commitments</div>
+              <div class="demo-finding-title">Savings Plan coverage only 34% of compute spend</div>
+              <div class="demo-finding-detail">£12,400/month running on-demand where 1yr no-upfront Savings Plans would cover it. Breakeven at 9 months.</div>
+              <div class="demo-saving">£3,100/month · Tier 3 — requires your approval</div>
+            </div>
+          </div>
+
+          <div class="demo-output" id="demo-3">
+            <div class="demo-finding">
+              <div class="demo-finding-label">Pending approval · Risk score: 78 · Est. saving: £3,100/month</div>
+              <div class="demo-finding-title">Savings Plan purchase — 1yr no-upfront, compute family</div>
+              <div class="demo-finding-detail">Agent reasoning: EC2 family has run at consistent utilisation for 90 days. No planned workload changes in roadmap tags. Breakeven is 9 months on 1yr plan. Similar case approved by your team in October.</div>
+              <div class="demo-saving">Slack notification sent · Approve / Reject buttons in #finops-alerts</div>
+            </div>
+            <div class="demo-finding">
+              <div class="demo-finding-label">Pending approval · Risk score: 72 · Est. saving: £840/month</div>
+              <div class="demo-finding-title">Graviton migration — prod-api cluster (M5 → M7g)</div>
+              <div class="demo-finding-detail">Agent retrieved 3 similar cases from memory: all approved, average 19% cost reduction, no performance regression. Recommends blue-green deployment to validate before full cutover.</div>
+              <div class="demo-saving">Terraform plan ready · Awaiting approval</div>
+            </div>
+          </div>
+
+          <div class="demo-output" id="demo-custom-out">
+            <div class="demo-thinking">
+              <span id="demo-thinking-text">Thinking</span>
+              <span class="demo-thinking-dots"><span></span><span></span><span></span></span>
+            </div>
+            <div id="demo-custom-response"></div>
+          </div>
+
+          <div style="color:var(--text3);font-size:0.8rem;font-family:var(--font-mono);margin-top:1rem" id="demo-placeholder">
+            ← Select a prompt or type your question to try the agent
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BETA CTA ──────────────────────────────────────────────────── -->
+<section class="beta-section" id="beta">
+  <div class="beta-glow"></div>
+  <div class="section-inner" style="position:relative;z-index:1">
+    <div class="reveal">
+      <div class="agentic-pro-badge" style="margin-bottom:1.5rem">⚡ FinOpsMind Pro Beta</div>
+      <h2 class="beta-title">Be the first to run<br><span>an autonomous FinOps agent.</span></h2>
+      <p class="beta-sub">Early access to the Pro agentic engine. Help shape the product. Priority onboarding and direct line to the team.</p>
+      <div class="beta-form">
+        <input class="beta-input" id="beta-email" type="email" placeholder="your@company.com">
+        <button class="beta-submit" onclick="submitBeta()">Request access →</button>
+      </div>
+      <div class="beta-note" id="beta-confirm" style="display:none;color:var(--teal)">✓ You're on the list. We'll be in touch shortly.</div>
+      <p class="beta-note">No credit card. No commitment. We review each application personally.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ──────────────────────────────────────────────────── -->
+<section id="pricing">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Start free. Scale to autonomous.</h2>
+      <p class="section-sub">No per-seat complexity. Priced on cloud spend under management.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card reveal">
+        <div class="pricing-top-bar std"></div>
+        <div class="pricing-tier-label std">Standard</div>
+        <div class="pricing-name">FinOpsMind</div>
+        <div class="pricing-price">
+          <span class="pricing-amount std">Free</span>
+          <span class="pricing-period"> during beta</span>
+        </div>
+        <p class="pricing-desc">Full rules engine, Terraform generation, multi-cloud support. Up to £50k/month cloud spend.</p>
+        <ul class="pricing-features-list">
+          <li><span class="pfl-icon std">✓</span>56 optimisation rules</li>
+          <li><span class="pfl-icon std">✓</span>Auto-generated Terraform HCL</li>
+          <li><span class="pfl-icon std">✓</span>Cost anomaly detection</li>
+          <li><span class="pfl-icon std">✓</span>Spend forecasting</li>
+          <li><span class="pfl-icon std">✓</span>Budget alerts and policies</li>
+          <li><span class="pfl-icon std">✓</span>AWS + Azure + GCP</li>
+        </ul>
+        <button class="pricing-btn std">Request access</button>
+      </div>
+      <div class="pricing-card featured reveal">
+        <div class="pricing-featured-badge">Most popular</div>
+        <div class="pricing-top-bar pro"></div>
+        <div class="pricing-tier-label pro">Pro</div>
+        <div class="pricing-name">FinOpsMind Pro</div>
+        <div class="pricing-price">
+          <span class="pricing-amount pro">Beta</span>
+          <span class="pricing-period"> — apply for access</span>
+        </div>
+        <p class="pricing-desc">Full agentic AI engine. Claude-powered reasoning. RAG self-learning. Approval gate. Slack integration.</p>
+        <ul class="pricing-features-list">
+          <li><span class="pfl-icon pro">✓</span>Everything in Standard</li>
+          <li><span class="pfl-icon pro">✓</span>Claude Sonnet orchestrator</li>
+          <li><span class="pfl-icon pro">✓</span>RAG vector memory (Qdrant)</li>
+          <li><span class="pfl-icon pro">✓</span>Tier 1/2/3 approval gate</li>
+          <li><span class="pfl-icon pro">✓</span>Slack approval notifications</li>
+          <li><span class="pfl-icon pro">✓</span>Full reasoning audit trail</li>
+          <li><span class="pfl-icon pro">✓</span>9 registered AI tools</li>
+        </ul>
+        <a href="#beta" class="pricing-btn pro">Join the beta →</a>
+      </div>
+      <div class="pricing-card reveal">
+        <div class="pricing-top-bar ent"></div>
+        <div class="pricing-tier-label ent">Enterprise</div>
+        <div class="pricing-name">Custom</div>
+        <div class="pricing-price">
+          <span class="pricing-amount" style="color:var(--gold);font-size:1.75rem">Talk to us</span>
+        </div>
+        <p class="pricing-desc">For enterprise cloud estates above £500k/month. Private deployment, custom rules, SLA, dedicated support.</p>
+        <ul class="pricing-features-list">
+          <li><span class="pfl-icon ent">✓</span>Everything in Pro</li>
+          <li><span class="pfl-icon ent">✓</span>Private VPC deployment</li>
+          <li><span class="pfl-icon ent">✓</span>Custom rule development</li>
+          <li><span class="pfl-icon ent">✓</span>Dedicated onboarding</li>
+          <li><span class="pfl-icon ent">✓</span>99.9% SLA</li>
+          <li><span class="pfl-icon ent">✓</span>SOC 2 / GDPR compliance</li>
+        </ul>
+        <a href="mailto:hello@finopsmind.cloud" class="pricing-btn ent">Get in touch</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ───────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <div class="footer-logo-mark">F</div>
+        FinOpsMind
+      </div>
+      <p class="footer-tagline">The only FinOps platform that reasons, learns, and acts — with your approval.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Product</h5>
+      <a href="#platform">Platform overview</a>
+      <a href="#rules">Rules engine</a>
+      <a href="#pro">Pro agent</a>
+      <a href="#pricing">Pricing</a>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy policy</a>
+      <a href="mailto:hello@finopsmind.cloud">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h5>Resources</h5>
+      <a href="#beta">Join Pro beta</a>
+      <a href="demo/">Interactive demo</a>
+      <a href="mailto:hello@finopsmind.cloud">Enterprise enquiry</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 FinOpsMind. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="privacy.html">Privacy</a>
+      <a href="about.html">About</a>
+      <a href="mailto:hello@finopsmind.cloud">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Nav scroll
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// Reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Demo
+function hideAllOutputs() {
+  document.querySelectorAll('.demo-output').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.demo-prompt').forEach(el => el.classList.remove('active'));
+  const ph = document.getElementById('demo-placeholder');
+  if(ph) ph.style.display = 'none';
+}
+function runDemo(idx) {
+  hideAllOutputs();
+  document.querySelectorAll('.demo-prompt')[idx].classList.add('active');
+  document.getElementById('demo-' + idx).classList.add('active');
+}
+
+async function runCustomDemo() {
+  const input = document.getElementById('demo-custom');
+  const query = input.value.trim();
+  if (!query) return;
+  hideAllOutputs();
+  const out = document.getElementById('demo-custom-out');
+  const thinkingText = document.getElementById('demo-thinking-text');
+  const responseEl = document.getElementById('demo-custom-response');
+  thinkingText.textContent = 'Thinking';
+  responseEl.innerHTML = '';
+  out.classList.add('active');
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `You are the FinOpsMind Cost Intelligence Agent — a production agentic AI for cloud FinOps. You are responding to a question about a fictional AWS account with these characteristics:
+- Monthly spend: £28,400
+- Top services: EC2 £12,200, RDS £5,800, S3 £2,100, NAT Gateway £1,900, Lambda £800
+- 6 idle EC2 instances (avg CPU <3%)
+- 3 RDS Multi-AZ in staging environments
+- Savings Plan coverage: only 34% of compute
+- 14 EBS gp2 volumes eligible for gp3 upgrade
+- No VPC endpoints for S3/DynamoDB despite high NAT Gateway usage
+
+Respond in the style of an expert FinOps AI agent: structured, precise, with GBP savings estimates. Lead with observations then concrete recommendations. Use technical AWS terminology naturally. Keep response under 200 words. Format as 2-3 short paragraphs without markdown headers.`,
+        messages: [{ role: 'user', content: query }]
+      })
+    });
+    const data = await response.json();
+    thinkingText.textContent = 'Agent response';
+    const text = data.content?.[0]?.text || 'Unable to get response — please try a suggested prompt above.';
+    responseEl.innerHTML = `<div class="demo-finding"><div class="demo-finding-label">FinOpsMind Agent — live response</div><div class="demo-finding-detail" style="line-height:1.7">${text.replace(/\n\n/g,'</div><div class="demo-finding-detail" style="line-height:1.7;margin-top:0.75rem">')}</div></div>`;
+  } catch(e) {
+    thinkingText.textContent = 'Demo';
+    responseEl.innerHTML = `<div class="demo-finding"><div class="demo-finding-label">Live demo</div><div class="demo-finding-detail">The live AI demo requires an API connection. Try one of the pre-built prompts on the left to see example agent responses.</div></div>`;
+  }
+}
+
+// Beta form
+function submitBeta() {
+  const email = document.getElementById('beta-email').value;
+  if (!email || !email.includes('@')) return;
+  document.getElementById('beta-confirm').style.display = 'block';
+  document.getElementById('beta-email').value = '';
+}
+</script>
+</body>
+</html>
